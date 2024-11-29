@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>의견 제출</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            font-size: 2rem;
+            color: #343a40;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 1rem;
+            color: #495057;
+            margin-bottom: 20px;
+        }
+        .comment-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 80px;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            resize: none;
+        }
+        button {
+            align-self: flex-end;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .comments {
+            margin-top: 20px;
+        }
+        .comment {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            background-color: #ffffff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+        }
+        .comment-meta {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        .comment-text {
+            word-wrap: break-word;
+            font-size: 1rem;
+            color: #343a40;
+        }
+        .delete-button {
+            align-self: flex-end;
+            background-color: #ffffff;
+            color: rgb(204, 204, 204);
+            border: none;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .delete-button:hover {
+            background-color: #bcbcbc;
+        }
+    </style>
+</head>
+<body>
+    <h1>의견을 말해주세요!</h1>
+    <p>만나서 하고 싶은 것, 하기 싫은 것, 추가적인 내용을 적어주세요.</p>
+    
+    <div class="comment-box">
+        <textarea id="commentInput" placeholder="의견을 입력하세요"></textarea>
+        <button onclick="addComment()">제출하기</button>
+    </div>
+
+    <div class="comments" id="commentsContainer"></div>
+
+    <script>
+        // 로컬 스토리지에서 닉네임 가져오기
+        function getNickname() {
+            const nickname = localStorage.getItem("nickname");
+            return nickname ? nickname : "익명"; // 닉네임이 없으면 '익명' 사용
+        }
+
+        // 로컬 스토리지에서 댓글 불러오기
+        function loadComments() {
+            const comments = JSON.parse(localStorage.getItem("comments")) || [];
+            const commentsContainer = document.getElementById("commentsContainer");
+            commentsContainer.innerHTML = ""; // 초기화
+            comments.forEach((commentData, index) => {
+                const { nickname, text } = commentData;
+
+                const commentElement = document.createElement("div");
+                commentElement.className = "comment";
+
+                const commentMeta = document.createElement("div");
+                commentMeta.className = "comment-meta";
+                commentMeta.innerText = nickname; // 닉네임 표시
+
+                const commentText = document.createElement("div");
+                commentText.className = "comment-text";
+                commentText.innerText = text;
+
+                const deleteButton = document.createElement("button");
+                deleteButton.className = "delete-button";
+                deleteButton.innerText = "X";
+                deleteButton.onclick = () => deleteComment(index);
+
+                commentElement.appendChild(commentMeta);
+                commentElement.appendChild(commentText);
+                commentElement.appendChild(deleteButton);
+                commentsContainer.appendChild(commentElement);
+            });
+        }
+
+        // 댓글 추가
+        function addComment() {
+            const commentInput = document.getElementById("commentInput");
+            const commentText = commentInput.value.trim();
+            if (commentText === "") {
+                alert("댓글을 입력하세요!");
+                return;
+            }
+            
+            const comments = JSON.parse(localStorage.getItem("comments")) || [];
+            const nickname = getNickname(); // 닉네임 가져오기
+            comments.push({ nickname, text: commentText });
+            localStorage.setItem("comments", JSON.stringify(comments));
+
+            commentInput.value = ""; // 입력창 초기화
+            loadComments(); // 업데이트
+        }
+
+        // 댓글 삭제
+        function deleteComment(index) {
+            const comments = JSON.parse(localStorage.getItem("comments")) || [];
+            comments.splice(index, 1); // 해당 댓글 삭제
+            localStorage.setItem("comments", JSON.stringify(comments));
+            loadComments(); // 업데이트
+        }
+
+        // 초기 로드 시 댓글 표시
+        window.onload = loadComments;
+    </script>
+</body>
+</html>
+
+
