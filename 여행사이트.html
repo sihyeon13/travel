@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>여행 계획표</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        #nicknameModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #nicknameModal .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        #nicknameModal h2 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            color: #343a40;
+        }
+        #nicknameModal input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        #nicknameModal button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #nicknameModal button:hover {
+            background-color: #0056b3;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #343a40;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        li:hover {
+            background-color: #0056b3;
+        }
+        li a {
+            text-decoration: none;
+            color: white;
+            display: block;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- 닉네임 입력 모달 -->
+    <div id="nicknameModal">
+        <div class="modal-content">
+            <h2>닉네임을 입력해주세요</h2>
+            <input type="text" id="nicknameInput" placeholder="닉네임">
+            <button onclick="saveNickname()">확인</button>
+        </div>
+    </div>
+
+    <header>
+        <h1>여행 계획표</h1>
+    </header>
+    <main>
+        <h1>목차</h1>
+        <ul>
+            <li><a href="#members">1. 모임 멤버</a></li>
+            <li><a href="#schedule">2. 일정</a></li>
+            <li><a href="#items">3. 준비물</a></li>
+            <li><a href="의견제출.html">4. 의견 제출</a></li>
+        </ul>
+
+        <!-- 모임 멤버 -->
+        <section id="members">
+            <h2>모임 멤버</h2>
+            <p>여행에 함께할 멤버들을 소개합니다.</p>
+        </section>
+
+        <!-- 일정 -->
+        <section id="schedule">
+            <h2>일정</h2>
+            <p>여행의 일정에 대해 자세히 알아보세요.</p>
+        </section>
+
+        <!-- 준비물 -->
+        <section id="items">
+            <h2>준비물</h2>
+            <p>여행을 위한 준비물을 확인하세요.</p>
+        </section>
+    </main>
+
+    <script>
+        // 닉네임 저장 및 표시
+        function saveNickname() {
+            const nicknameInput = document.getElementById("nicknameInput");
+            const nickname = nicknameInput.value.trim();
+            if (nickname === "") {
+                alert("닉네임을 입력해주세요!");
+                return;
+            }
+            localStorage.setItem("nickname", nickname);
+            closeNicknameModal();
+        }
+
+        // 닉네임 입력 모달 열기
+        function showNicknameModal() {
+            const modal = document.getElementById("nicknameModal");
+            modal.style.display = "flex";
+        }
+
+        // 닉네임 입력 모달 닫기
+        function closeNicknameModal() {
+            const modal = document.getElementById("nicknameModal");
+            modal.style.display = "none";
+        }
+
+        // 사이트에 다시 들어올 때 닉네임 입력 요청
+        window.onload = function () {
+            localStorage.removeItem("nickname"); // 기존 닉네임 삭제 (항상 재입력)
+            showNicknameModal();
+        };
+    </script>
+</body>
+</html>
